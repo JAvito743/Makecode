@@ -1,0 +1,614 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Retos micro:bit Grado Octavo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: guía de taller — cabecera compacta, selector de retos, mesa de trabajo (bloques | simulador), y debajo pasos + código */
+:root{
+  --bg:#EDF0F5; --surface:#FFFFFF; --surface-2:#F5F7FA; --ink:#131A2C; --muted:#5A6479; --line:#D8DEE8;
+  --accent:#F2A900; --accent-ink:#271B00; --accent-soft:#FFF3D1;
+  --ws:#F1F3F7; --ws-dot:#C9D1DD; --code-bg:#151B2B; --code-ink:#E6EAF3;
+  --ok:#11845B;
+  --f-display:"Bricolage Grotesque", "Figtree", system-ui, sans-serif;
+  --f-body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0D1220; --surface:#151C2D; --surface-2:#1B2337; --ink:#E8ECF4; --muted:#9BA6BB; --line:#283248;
+  --accent:#FFC23D; --accent-ink:#271B00; --accent-soft:#33290F;
+  --ws:#111829; --ws-dot:#273249; --code-bg:#0A0F1B; --code-ink:#E6EAF3; --ok:#3DD598; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0D1220; --surface:#151C2D; --surface-2:#1B2337; --ink:#E8ECF4; --muted:#9BA6BB; --line:#283248;
+  --accent:#FFC23D; --accent-ink:#271B00; --accent-soft:#33290F;
+  --ws:#111829; --ws-dot:#273249; --code-bg:#0A0F1B; --code-ink:#E6EAF3; --ok:#3DD598; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font:16px/1.55 var(--f-body); padding-left:max(16px, env(safe-area-inset-left,0px)); padding-right:max(16px, env(safe-area-inset-right,0px)); padding-block:20px 48px}
+.wrap{max-width:1180px; margin:0 auto; display:flex; flex-direction:column; gap:22px}
+h1,h2,h3{font-family:var(--f-display); text-wrap:balance; margin:0; letter-spacing:-.01em}
+p{margin:0}
+.eyebrow{font:700 12px/1 var(--f-body); letter-spacing:.09em; text-transform:uppercase; color:var(--muted)}
+button{font:inherit; color:inherit}
+:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+
+/* Hero */
+.hero{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:20px; align-items:end; padding-block:8px 4px}
+.hero h1{font-size:clamp(30px,5.4vw,54px); line-height:1.02; font-weight:800}
+.hero h1 mark{background:var(--accent); color:var(--accent-ink); padding:0 .16em; border-radius:.14em}
+.hero p.lead{max-width:62ch; color:var(--muted); margin-top:12px; font-size:17px}
+.hero .open{display:inline-flex; align-items:center; gap:8px; background:var(--ink); color:var(--bg); text-decoration:none; font-weight:700; padding:12px 18px; border-radius:12px; white-space:nowrap}
+.hero .open:hover{transform:translateY(-1px)}
+@media (max-width:700px){ .hero{grid-template-columns:1fr} .hero .open{justify-self:start} }
+
+/* How-to */
+.howto{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px}
+.how{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px 18px; display:flex; gap:14px; align-items:flex-start}
+.how .n{flex:none; width:34px; height:34px; border-radius:10px; background:var(--accent-soft); color:var(--ink); display:grid; place-items:center; font:800 16px var(--f-display)}
+.how h3{font-size:17px; margin-bottom:4px}
+.how p{color:var(--muted); font-size:14.5px}
+.how kbd{font:600 12.5px var(--f-mono); background:var(--surface-2); border:1px solid var(--line); border-radius:6px; padding:1px 6px; color:var(--ink)}
+@media (max-width:760px){ .howto{grid-template-columns:1fr} }
+
+/* Selector */
+.picker{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:10px}
+.pick{all:unset; cursor:pointer; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:12px 12px 13px; display:flex; flex-direction:column; gap:6px; transition:transform .15s, border-color .15s, background .15s; min-width:0}
+.pick:hover{transform:translateY(-2px); border-color:var(--muted)}
+.pick:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+.pick .num{font:800 13px var(--f-mono); color:var(--muted)}
+.pick .nm{font:700 15px/1.2 var(--f-display)}
+.pick .cc{font-size:12px; font-weight:700; align-self:flex-start; padding:2px 8px; border-radius:999px; color:#fff}
+.pick[aria-selected="true"]{background:var(--ink); border-color:var(--ink)}
+.pick[aria-selected="true"] .nm{color:var(--bg)}
+.pick[aria-selected="true"] .num{color:var(--accent)}
+@media (max-width:980px){ .picker{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-width:520px){ .picker{display:flex; overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:6px} .pick{flex:0 0 46%; scroll-snap-align:start} }
+
+/* Exercise header */
+.exhead{display:flex; flex-direction:column; gap:10px}
+.exhead h2{font-size:clamp(26px,3.6vw,38px); font-weight:800}
+.exhead .sit{max-width:70ch; color:var(--muted); font-size:16.5px}
+.chips{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.chip{font-size:12.5px; font-weight:700; color:#fff; padding:4px 10px; border-radius:999px}
+.chips .lbl2{font-size:13px; color:var(--muted); font-weight:600; margin-right:2px}
+
+/* Lab: workspace + sim */
+.lab{display:grid; grid-template-columns:minmax(0,1.4fr) minmax(300px,1fr); gap:18px; align-items:start}
+@media (max-width:900px){ .lab{grid-template-columns:1fr} }
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:14px; min-width:0}
+.ptitle{display:flex; justify-content:space-between; align-items:center; gap:10px; margin:2px 4px 12px; flex-wrap:wrap}
+.ptitle h3{font-size:17px}
+.ptitle small{color:var(--muted); font-size:13px}
+.ws{background-color:var(--ws); background-image:radial-gradient(var(--ws-dot) 1.1px, transparent 1.4px); background-size:18px 18px; border-radius:12px; padding:18px; overflow-x:auto; display:flex; flex-wrap:wrap; gap:18px 22px; align-items:flex-start; min-height:200px}
+
+/* MakeCode blocks */
+.k-basic{--c:#1E90FF} .k-input{--c:#D400D4} .k-music{--c:#E63022} .k-logic{--c:#00A4A6}
+.k-var{--c:#DC143C} .k-math{--c:#9400D3} .k-loops{--c:#00AA00} .k-radio{--c:#E3008C}
+.c,.st,.rp,.bo{font:700 13px/1.15 var(--f-body); color:#fff}
+.c{background:var(--c); border-radius:6px; display:inline-flex; flex-direction:column; align-self:flex-start; box-shadow:inset 0 -2px 0 rgba(0,0,0,.18); position:relative}
+.c.hat{border-radius:18px 18px 6px 6px; padding-top:4px; transition:box-shadow .2s}
+.c.hat.run{box-shadow:inset 0 -2px 0 rgba(0,0,0,.18), 0 0 0 3px var(--accent), 0 0 22px 2px var(--accent)}
+.c.hat.run::after{content:"ejecutando"; position:absolute; top:-11px; right:10px; background:var(--accent); color:var(--accent-ink); font:800 10px/1 var(--f-body); letter-spacing:.06em; text-transform:uppercase; padding:4px 7px; border-radius:999px}
+.row{display:flex; align-items:center; gap:6px; padding:7px 10px; white-space:nowrap}
+.mouth{margin-left:14px; background:var(--ws); display:flex; flex-direction:column; align-items:flex-start; gap:2px; padding:2px 0; min-height:20px; border-radius:4px 0 0 4px}
+.foot{height:12px; min-width:60px}
+.st{background:var(--c); border-radius:5px; display:flex; align-items:center; gap:6px; padding:7px 10px; white-space:nowrap; box-shadow:inset 0 -2px 0 rgba(0,0,0,.18)}
+.f{background:#fff; color:#2A2F3A; border-radius:999px; padding:3px 9px; min-width:24px; text-align:center}
+.dd{background:rgba(0,0,0,.2); border-radius:999px; padding:3px 9px}
+.dd b{font-size:10px; opacity:.85}
+.rp{background:var(--c); border:1px solid rgba(0,0,0,.22); border-radius:999px; padding:3px 9px; display:inline-flex; align-items:center; gap:6px}
+.bo{background:var(--c); display:inline-flex; align-items:center; gap:6px; padding:4px 15px; clip-path:polygon(11px 0,calc(100% - 11px) 0,100% 50%,calc(100% - 11px) 100%,11px 100%,0 50%); filter:drop-shadow(0 0 0 rgba(0,0,0,.2))}
+.bo .bo{background:color-mix(in srgb, var(--c) 82%, #000)}
+.ico{background:#fff; border-radius:5px; padding:3px; display:inline-grid; grid-template-columns:repeat(5,5px); gap:1px}
+.ico i{width:5px; height:5px; background:#E3E5EA; border-radius:1px}
+.ico i.on{background:#E8261C}
+.ws > .c{animation:pop .45s cubic-bezier(.2,.8,.2,1.2) both; animation-delay:var(--d,0s)}
+@keyframes pop{from{opacity:.25; transform:translateY(10px) scale(.97)} to{opacity:1; transform:none}}
+
+/* Simulator */
+.sim{position:sticky; top:14px}
+@media (max-width:900px){ .sim{position:static} }
+.simtools{display:flex; gap:8px}
+.tbtn{border:1px solid var(--line); background:var(--surface-2); border-radius:10px; padding:7px 11px; font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; gap:6px; align-items:center}
+.tbtn:hover{border-color:var(--muted)}
+.tbtn[aria-pressed="false"]{opacity:.6}
+.boards{display:flex; gap:14px; justify-content:center; flex-wrap:wrap}
+.bwrap{flex:1 1 220px; max-width:300px; display:flex; flex-direction:column; align-items:center; gap:10px; min-width:0}
+.bname{font:700 12px var(--f-mono); color:var(--muted)}
+.board{position:relative; width:100%; aspect-ratio:1.2; background:linear-gradient(160deg,#2A2F3A,#15181F); border-radius:20px; display:grid; grid-template-columns:21% 1fr 21%; grid-template-rows:15% 1fr 19%; box-shadow:0 10px 26px -12px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.08)}
+.board.shake{animation:shk .45s}
+@keyframes shk{0%,100%{transform:none}20%{transform:translateX(-7px) rotate(-3deg)}40%{transform:translateX(7px) rotate(3deg)}60%{transform:translateX(-5px) rotate(-2deg)}80%{transform:translateX(4px)}}
+.logo{grid-column:2; grid-row:1; justify-self:center; align-self:center; width:22%; aspect-ratio:2.3; border:3px solid #B9BFCA; border-radius:999px; position:relative}
+.logo::before,.logo::after{content:""; position:absolute; top:50%; width:16%; aspect-ratio:1; border-radius:50%; background:#B9BFCA; transform:translateY(-50%)}
+.logo::before{left:20%} .logo::after{right:20%}
+.leds{grid-column:2; grid-row:2; display:grid; grid-template-columns:repeat(5,1fr); gap:9%; padding:4% 9%; align-content:center}
+.led{aspect-ratio:.62; border-radius:2px; background:#3B1416; transition:background .07s, box-shadow .07s; justify-self:center; width:62%}
+.led.on{background:#FF3B30; box-shadow:0 0 10px 2px rgba(255,59,48,.75), inset 0 0 2px #fff}
+.bt{grid-row:2; justify-self:center; align-self:center; width:60%; aspect-ratio:1; border-radius:22%; border:0; background:#C8CDD6; cursor:pointer; position:relative; padding:0; touch-action:manipulation; transition:transform .08s}
+.bt::after{content:""; position:absolute; inset:22%; border-radius:50%; background:#1C1F26; box-shadow:inset 0 -3px 0 rgba(255,255,255,.12)}
+.bt.down{transform:scale(.9)}
+.bt span{position:absolute; top:-46%; left:50%; transform:translateX(-50%); color:#fff; font:800 13px var(--f-body)}
+.bt.a{grid-column:1} .bt.b{grid-column:3}
+.pins{grid-column:1/4; grid-row:3; display:flex; gap:3px; padding:0 8px 8px; align-items:stretch}
+.pin{flex:.5; background:linear-gradient(#E6BE5C,#B98D2E); border-radius:0 0 3px 3px}
+.pin.big{flex:2.4; position:relative; display:grid; place-items:center; color:#3A2A05; font:800 10px var(--f-mono)}
+.pin.big::before{content:""; width:34%; aspect-ratio:1; border-radius:50%; background:#15181F; position:absolute; top:22%}
+.pin.big b{position:absolute; bottom:6%}
+.board.tx::before,.board.rx::before{content:""; position:absolute; inset:-6px; border-radius:24px; border:3px solid var(--accent); animation:ring .7s ease-out forwards; pointer-events:none}
+@keyframes ring{from{opacity:1; transform:scale(.96)} to{opacity:0; transform:scale(1.08)}}
+.note{position:absolute; top:6px; right:10px; color:#FFC23D; font:800 14px var(--f-body); opacity:0; transition:opacity .2s}
+.board.sound .note{opacity:1; animation:bob .5s infinite alternate}
+@keyframes bob{to{transform:translateY(-3px)}}
+.shakebtn{border:0; background:var(--ink); color:var(--bg); font:800 12px var(--f-body); letter-spacing:.08em; padding:8px 14px; border-radius:999px; cursor:pointer}
+.vars{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; min-height:24px}
+.var{font:600 12.5px var(--f-mono); background:#DC143C; color:#fff; padding:3px 9px; border-radius:999px; font-variant-numeric:tabular-nums}
+.sensors{display:flex; flex-direction:column; gap:12px; margin-top:14px; padding-top:14px; border-top:1px dashed var(--line)}
+.sensor{display:grid; grid-template-columns:auto minmax(0,1fr) 54px; gap:10px; align-items:center; font-size:14px; font-weight:600}
+.sensor input{width:100%; accent-color:var(--accent)}
+.sensor output{font:600 13px var(--f-mono); text-align:right; font-variant-numeric:tabular-nums}
+.hint{margin-top:12px; font-size:13.5px; color:var(--muted); background:var(--surface-2); border-radius:10px; padding:10px 12px}
+.hint b{color:var(--ink)}
+
+/* Steps + code */
+.duo{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:18px; align-items:start}
+@media (max-width:900px){ .duo{grid-template-columns:1fr} }
+.steps{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; counter-reset:s}
+.steps li{counter-increment:s}
+.steps label{display:grid; grid-template-columns:24px 26px minmax(0,1fr); gap:8px; align-items:start; padding:9px 10px; border-radius:12px; cursor:pointer; transition:background .15s}
+.steps label:hover{background:var(--surface-2)}
+.steps label::before{content:counter(s); grid-column:2; grid-row:1; font:800 13px var(--f-mono); color:var(--muted); padding-top:2px}
+.steps input{grid-column:1; grid-row:1; width:18px; height:18px; margin-top:3px; accent-color:var(--ok)}
+.steps .tx{grid-column:3; grid-row:1; font-size:15px}
+.steps input:checked ~ .tx{color:var(--muted); text-decoration:line-through; text-decoration-color:var(--ok)}
+.cat{display:inline-block; font-size:11.5px; font-weight:800; color:#fff; padding:1px 8px; border-radius:999px; margin-right:6px; vertical-align:1px}
+.prog{height:6px; background:var(--surface-2); border-radius:999px; overflow:hidden; margin:2px 4px 12px}
+.prog i{display:block; height:100%; width:0; background:var(--ok); transition:width .3s}
+.codebox{background:var(--code-bg); border-radius:12px; overflow:hidden}
+.codebar{display:flex; justify-content:space-between; align-items:center; padding:8px 8px 8px 14px; border-bottom:1px solid rgba(255,255,255,.08); gap:8px}
+.codebar span{font:600 12px var(--f-mono); color:#9AA5BB}
+.copy{border:0; background:var(--accent); color:var(--accent-ink); font-weight:800; font-size:13px; padding:7px 12px; border-radius:8px; cursor:pointer}
+pre{margin:0; padding:14px 16px; overflow-x:auto; font:13px/1.6 var(--f-mono); color:var(--code-ink)}
+.tk-k{color:#FF9DCE} .tk-s{color:#A6E3A1} .tk-n{color:#FFC23D} .tk-c{color:#7F8AA3}
+.paste{margin-top:12px; font-size:14px; color:var(--muted)}
+.paste ol{margin:6px 0 0; padding-left:20px; display:flex; flex-direction:column; gap:3px}
+.cards{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:14px}
+.card{border-radius:14px; padding:14px 16px; border:1px solid var(--line); background:var(--surface-2)}
+.card h4{margin:0 0 4px; font:800 14px var(--f-display); letter-spacing:.02em}
+.card p{font-size:14.5px; color:var(--muted)}
+.card.reto{background:var(--accent-soft); border-color:transparent}
+.card.reto p{color:var(--ink)}
+@media (max-width:560px){ .cards{grid-template-columns:1fr} }
+.ev{margin:0; padding-left:22px; display:flex; flex-direction:column; gap:10px; font-size:15px}
+.ev li::marker{font-weight:800; color:var(--muted)}
+.mono{font:600 13px var(--f-mono); background:var(--surface-2); border:1px solid var(--line); border-radius:6px; padding:1px 6px; word-break:break-all}
+.qbox{margin-top:6px; background:var(--accent-soft); border-radius:10px; padding:10px 12px; font-weight:600}
+.entrega{padding:22px; display:flex; flex-direction:column; gap:10px}
+.entrega h2{font-size:clamp(24px,3.2vw,34px); font-weight:800}
+.entrega h3{font-size:17px; margin-bottom:10px}
+.entgrid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:26px; margin-top:6px}
+@media (max-width:860px){ .entgrid{grid-template-columns:1fr} }
+.tbl{overflow-x:auto; border:1px solid var(--line); border-radius:12px}
+table{width:100%; border-collapse:collapse; font-size:14.5px}
+th,td{padding:10px 12px; text-align:left; border-bottom:1px solid var(--line)}
+th{font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); background:var(--surface-2)}
+td:last-child,th:last-child{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+tfoot td{font-weight:800; border-bottom:0}
+footer{color:var(--muted); font-size:13px; text-align:center; padding-top:6px}
+@media (prefers-reduced-motion: reduce){ *{animation:none!important; transition:none!important} }
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <div class="eyebrow">Tecnología e Informática · Grado Octavo · Guía 3</div>
+      <h1 style="margin-top:10px">Nuevos retos con <mark>micro:bit</mark></h1>
+      <p class="lead">Seis programas para armar en MakeCode. Cada uno trae los bloques tal como deben quedar y un simulador para ver cómo debe funcionar. Tu trabajo es encontrar cada bloque en su categoría, armarlo y probarlo.</p>
+    </div>
+    <a class="open" href="https://makecode.microbit.org/" target="_blank" rel="noopener">Abrir MakeCode ↗</a>
+  </header>
+
+  <section class="howto" aria-label="Cómo pasar los programas a MakeCode">
+    <div class="how"><div class="n">A</div><div><h3>Armar con bloques</h3><p>En MakeCode crea un <kbd>Nuevo proyecto</kbd>. Busca cada bloque por el color de su categoría y arrástralo hasta que tu programa quede igual al de la guía.</p></div></div>
+    <div class="how"><div class="n">B</div><div><h3>Guardar la evidencia</h3><p>Al terminar cada ejercicio publica el proyecto con <kbd>Compartir</kbd>, copia el enlace y toma una captura. Todo va en un documento que entregas en Classroom.</p></div></div>
+  </section>
+
+  <nav class="picker" role="tablist" aria-label="Ejercicios" id="picker"></nav>
+
+  <main id="ex" class="wrap" style="gap:18px"></main>
+
+  <section class="panel entrega" aria-labelledby="ent-h">
+    <div class="eyebrow">Para terminar</div>
+    <h2 id="ent-h">Entrega en Classroom</h2>
+    <div class="entgrid">
+      <div>
+        <h3>Arma tu documento</h3>
+        <ol class="ev">
+          <li>Crea un documento de Google llamado <span class="mono">Guia3_MakeCode_Apellido_Nombre</span>.</li>
+          <li>Escribe tu nombre completo, grado y número de grupo al inicio.</li>
+          <li>Por cada ejercicio pon el título, la captura, el enlace publicado y la respuesta a su pregunta.</li>
+          <li>Al final responde:<div class="qbox">¿Cuál ejercicio fue el más difícil de armar y cómo lo resolviste?<br>¿En qué situación de tu colegio o de tu casa usarías uno de estos programas?</div></li>
+          <li>En la tarea de Classroom pulsa <b>Agregar › Google Drive</b>, elige tu documento y pulsa <b>Entregar</b>.</li>
+        </ol>
+        <p class="paste">Antes de entregar abre cada enlace en una pestaña nueva para comprobar que funciona.</p>
+      </div>
+      <div>
+        <h3>Cómo se evalúa</h3>
+        <div class="tbl"><table>
+          <thead><tr><th>Criterio</th><th>Valor</th></tr></thead>
+          <tbody>
+            <tr><td>Ejercicios 1 y 2: condiciones “si no si” funcionando</td><td>20%</td></tr>
+            <tr><td>Ejercicios 3 y 4: variables y bucle “mientras” funcionando</td><td>25%</td></tr>
+            <tr><td>Ejercicios 5 y 6: operador “y” y radio funcionando</td><td>25%</td></tr>
+            <tr><td>Respuestas a las preguntas de cada ejercicio</td><td>15%</td></tr>
+            <tr><td>Entrega completa: capturas, enlaces y preguntas finales</td><td>15%</td></tr>
+          </tbody>
+          <tfoot><tr><td>Total</td><td>100%</td></tr></tfoot>
+        </table></div>
+        <div class="card reto" style="margin-top:14px"><h4>Bonificación</h4><p>Quien resuelva al menos dos retos extra y los incluya en el documento suma puntos adicionales.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Bloques para makecode.microbit.org. Si una melodía aparece con otro nombre en español, elige la que suene parecida.</footer>
+</div>
+
+<script>
+/* ---------- Datos: íconos y fuente 5x5 ---------- */
+const ICONS={
+  Heart:"01010 11111 11111 01110 00100", SmallHeart:"00000 01010 01110 00100 00000",
+  Happy:"00000 01010 00000 10001 01110", Sad:"00000 01010 00000 01110 10001",
+  Yes:"00000 00001 00010 10100 01000", No:"10001 01010 00100 01010 10001",
+  SmallSquare:"00000 01110 01010 01110 00000", Square:"11111 10001 10001 10001 11111",
+  Scissors:"11001 11010 00100 11010 11001", Asleep:"00000 11011 00000 01110 00000"
+};
+const FONT={"0":"01100,10010,10010,10010,01100","1":"00100,01100,00100,00100,01110","2":"11100,00010,01100,10000,11110","3":"11110,00010,00100,10010,01100","4":"00110,01010,10010,11111,00010","5":"11111,10000,11110,00001,11110","6":"00010,00100,01110,10001,01110","7":"11111,00010,00100,01000,10000","8":"01110,10001,01110,10001,01110","9":"01110,10001,01110,00100,01000",
+A:"01100,10010,11110,10010,10010",B:"11100,10010,11100,10010,11100",C:"01110,10000,10000,10000,01110",D:"11100,10010,10010,10010,11100",E:"11110,10000,11100,10000,11110",F:"11110,10000,11100,10000,10000",G:"01110,10000,10011,10001,01110",H:"10010,10010,11110,10010,10010",I:"11100,01000,01000,01000,11100",J:"11111,00010,00010,10010,01100",K:"10010,10100,11000,10100,10010",L:"10000,10000,10000,10000,11110",M:"10001,11011,10101,10001,10001",N:"10001,11001,10101,10011,10001",O:"01100,10010,10010,10010,01100",P:"11100,10010,11100,10000,10000",Q:"01100,10010,10010,01100,00110",R:"11100,10010,11100,10010,10001",S:"01110,10000,01100,00010,11100",T:"11111,00100,00100,00100,00100",U:"10010,10010,10010,10010,01100",V:"10001,10001,10001,01010,00100",W:"10001,10001,10101,11011,10001",X:"10010,10010,01100,10010,10010",Y:"10001,01010,00100,00100,00100",Z:"11110,00100,01000,10000,11110","!":"01000,01000,01000,00000,01000","-":"00000,00000,01110,00000,00000"," ":"00000,00000,00000,00000,00000"};
+const grid=s=>s.split(/[ ,]/).map(r=>[...r].map(c=>c==="1"));
+
+/* ---------- DSL de bloques ---------- */
+const E=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const F=v=>({t:"f",v}), D=v=>({t:"dd",v}), I=n=>({t:"ico",n});
+const V=n=>({t:"rp",k:"var",p:[n]}), R=(k,p)=>({t:"rp",k,p}), Bo=(k,p)=>({t:"bo",k,p});
+const S=(k,p)=>({t:"st",k,p}), HAT=(k,p,body,h)=>({t:"hat",k,p,body,h});
+const IF=(br,els)=>({t:"if",br,els}), LOOP=(k,p,body)=>({t:"loop",k,p,body});
+const ico=(n,cls)=>`<span class="${cls}" aria-label="ícono">${grid(ICONS[n]).flat().map(o=>`<i class="${o?"on":""}"></i>`).join("")}</span>`;
+function part(x){
+  if(typeof x==="string") return `<span>${E(x)}</span>`;
+  if(x.t==="f") return `<span class="f">${E(x.v)}</span>`;
+  if(x.t==="dd") return `<span class="dd">${E(x.v)} <b>▾</b></span>`;
+  if(x.t==="ico") return ico(x.n,"ico");
+  return `<span class="${x.t} k-${x.k}">${x.p.map(part).join("")}</span>`;
+}
+const row=p=>`<div class="row">${p.map(part).join("")}</div>`;
+const mouth=b=>`<div class="mouth">${b.map(stmt).join("")}</div>`;
+function stmt(x){
+  if(x.t==="st") return `<div class="st k-${x.k}">${x.p.map(part).join("")}</div>`;
+  if(x.t==="if"){ let h=`<div class="c k-logic">`; x.br.forEach((b,i)=>{h+=row([i?"si no si":"si",b.c,"entonces"])+mouth(b.b)}); if(x.els) h+=row(["si no"])+mouth(x.els); return h+`<div class="foot"></div></div>`; }
+  if(x.t==="loop") return `<div class="c k-${x.k}">${row(x.p)}${mouth(x.body)}<div class="foot"></div></div>`;
+}
+const hat=(x,i)=>`<div class="c hat k-${x.k}" data-h="${x.h}" style="--d:${i*0.09}s">${row(x.p)}${mouth(x.body)}<div class="foot"></div></div>`;
+const CATC={basic:"#1E90FF",input:"#D400D4",music:"#E63022",logic:"#00A4A6",var:"#DC143C",math:"#9400D3",loops:"#00AA00",radio:"#E3008C"};
+const CATN={basic:"Básico",input:"Entrada",music:"Música",logic:"Lógica",var:"Variables",math:"Matemáticas",loops:"Bucles",radio:"Radio"};
+const cat=k=>`<span class="cat" style="background:${CATC[k]}">${CATN[k]}</span>`;
+const btn=k=>`al presionarse el botón`;
+
+/* ---------- Ejercicios ---------- */
+const EX=[
+{ id:"ej1", q:"¿Por qué el bloque “escoger al azar” va de 0 a 2? Si lo cambias de 1 a 3, ¿qué más tendrías que cambiar para que el juego funcione?", name:"Piedra, papel o tijera", concept:"si no si", cc:"logic",
+  sit:"Al agitar la micro:bit, el programa escoge al azar entre piedra, papel o tijera y muestra el ícono. Sirve para jugar con un compañero.",
+  news:[["logic","si … si no si … si no"],["math","escoger al azar"],["var","variable jugada"]],
+  blocks:[
+    HAT("basic",["al iniciar"],[S("basic",["mostrar cadena",F('"PPT"')])],"start"),
+    HAT("input",["al agitar"],[
+      S("var",["fijar",D("jugada"),"a",R("math",["escoger al azar de",F(0),"a",F(2)])]),
+      IF([{c:Bo("logic",[V("jugada"),D("="),F(0)]),b:[S("basic",["mostrar ícono",I("SmallSquare")])]},
+          {c:Bo("logic",[V("jugada"),D("="),F(1)]),b:[S("basic",["mostrar ícono",I("Square")])]}],
+         [S("basic",["mostrar ícono",I("Scissors")])])
+    ],"shake")],
+  steps:[["var","Pulsa “Crear una variable” y nómbrala <b>jugada</b>."],
+    ["basic","Dentro de “al iniciar” pon “mostrar cadena” con el texto <b>PPT</b>."],
+    ["input","Arrastra el bloque “al agitar” al área de programación."],
+    ["var","Dentro de “al agitar” coloca “fijar jugada a 0”."],
+    ["math","Pon “escoger al azar de 0 a 10” en el espacio del 0 y cámbialo a <b>0</b> y <b>2</b>."],
+    ["logic","Debajo agrega “si … entonces … si no”. Pulsa el <b>+</b> del bloque para que aparezca “si no si”."],
+    ["logic","En cada “si” pon la comparación “0 = 0”. A la izquierda arrastra <b>jugada</b> (Variables) y a la derecha escribe 0 y 1."],
+    ["basic","Agrega “mostrar ícono” en cada parte: cuadrado pequeño (piedra), cuadrado grande (papel) y tijeras."]],
+  test:"Haz clic en AGITAR varias veces. El ícono cambia al azar entre los tres.",
+  reto:"Agrega “al presionarse el botón A” que muestre cuántas veces se ha jugado, usando una variable <b>partidas</b>.",
+  sens:["shake"], boards:1,
+  hint:"Pulsa <b>AGITAR</b> debajo de la tarjeta. Observa cómo cambia la variable jugada.",
+  prog:m=>{ let jugada=0; m.v("jugada",0);
+    m.onShake(async()=>{ jugada=m.rand(0,2); m.v("jugada",jugada);
+      if(jugada==0) await m.showIcon("SmallSquare"); else if(jugada==1) await m.showIcon("Square"); else await m.showIcon("Scissors"); });
+    m.start(async()=>{ await m.showString("PPT"); }); } },
+
+{ id:"ej2", q:"Si la temperatura es exactamente 18 °C, ¿qué mensaje aparece? ¿Y con 28 °C? Explica por qué.", name:"Termómetro de 3 niveles", concept:"rangos", cc:"logic",
+  sit:"Mejora del termómetro de la guía anterior. Ahora distingue tres niveles: frío por debajo de 18 °C, templado entre 18 y 28 °C, y calor por encima de 28 °C.",
+  news:[["logic","si no si"],["logic","comparar ≤"],["var","variable temp"]],
+  blocks:[HAT("basic",["para siempre"],[
+      S("var",["fijar",D("temp"),"a",R("input",["temperatura (°C)"])]),
+      IF([{c:Bo("logic",[V("temp"),D("<"),F(18)]),b:[S("basic",["mostrar cadena",F('"FRIO"')])]},
+          {c:Bo("logic",[V("temp"),D("≤"),F(28)]),b:[S("basic",["mostrar cadena",F('"TEMPLADO"')])]}],
+         [S("basic",["mostrar cadena",F('"CALOR"')])])
+    ],"forever")],
+  steps:[["var","Crea una variable llamada <b>temp</b>."],
+    ["var","Dentro de “para siempre” coloca “fijar temp a 0”."],
+    ["input","En el espacio del 0 pon “temperatura (°C)”."],
+    ["logic","Debajo agrega “si … entonces … si no” y pulsa <b>+</b> para tener “si no si”."],
+    ["logic","Primera condición: <b>temp &lt; 18</b>. Dentro, “mostrar cadena” con <b>FRIO</b>."],
+    ["logic","Segunda condición: <b>temp ≤ 28</b>. Dentro, “mostrar cadena” con <b>TEMPLADO</b>."],
+    ["basic","En “si no” pon “mostrar cadena” con <b>CALOR</b>."]],
+  test:"Mueve el termómetro a 10, 22 y 35 °C. Debe aparecer un mensaje distinto en cada caso.",
+  reto:"Cambia los textos por íconos para que la respuesta sea más rápida, o agrega un cuarto nivel “HELADO” por debajo de 5 °C.",
+  sens:["temp"], boards:1,
+  hint:"Mueve el control de <b>temperatura</b>. El cambio se ve cuando termina de pasar la palabra actual.",
+  prog:m=>{ let temp=0;
+    m.forever(async()=>{ temp=m.temperature(); m.v("temp",temp);
+      if(temp<18) await m.showString("FRIO"); else if(temp<=28) await m.showString("TEMPLADO"); else await m.showString("CALOR"); }); } },
+
+{ id:"ej3", q:"El botón B ya pone los pasos en 0. Entonces, ¿para qué sirve “fijar pasos a 0” dentro de “al iniciar”?", name:"Podómetro", concept:"contador", cc:"var",
+  sit:"La micro:bit cuenta los pasos: cada vez que se agita suma uno. El botón A muestra el total y el botón B reinicia la cuenta.",
+  news:[["input","al agitar"],["var","cambiar … por"],["basic","borrar pantalla"]],
+  blocks:[
+    HAT("basic",["al iniciar"],[S("var",["fijar",D("pasos"),"a",F(0)]),S("basic",["mostrar cadena",F('"PASOS"')])],"start"),
+    HAT("input",["al agitar"],[S("var",["cambiar",D("pasos"),"por",F(1)]),S("basic",["mostrar ícono",I("SmallHeart")]),S("basic",["borrar pantalla"])],"shake"),
+    HAT("input",[btn(),D("A")],[S("basic",["mostrar número",V("pasos")])],"A"),
+    HAT("input",[btn(),D("B")],[S("var",["fijar",D("pasos"),"a",F(0)]),S("basic",["mostrar ícono",I("Yes")])],"B")],
+  steps:[["var","Crea una variable llamada <b>pasos</b>."],
+    ["var","En “al iniciar” coloca “fijar pasos a 0”."],
+    ["basic","Debajo, “mostrar cadena” con <b>PASOS</b>."],
+    ["input","Arrastra “al agitar”. Dentro pon “cambiar pasos por 1”."],
+    ["basic","Agrega “mostrar ícono” con el corazón pequeño y luego “borrar pantalla” (está en Básico › más)."],
+    ["input","Agrega “al presionarse el botón A” con “mostrar número” y la variable <b>pasos</b>."],
+    ["input","Agrega “al presionarse el botón B” con “fijar pasos a 0” y “mostrar ícono” ✓."]],
+  test:"Agita 5 veces y presiona A: debe salir 5. Presiona B y luego A: debe salir 0.",
+  reto:"Cuando pasos llegue a 10, muestra la palabra <b>META</b>. Pista: usa un “si” dentro de “al agitar”.",
+  sens:["shake"], boards:1,
+  hint:"Agita varias veces, luego presiona <b>A</b> para ver el total y <b>B</b> para reiniciar.",
+  prog:m=>{ let pasos=0;
+    m.onShake(async()=>{ pasos+=1; m.v("pasos",pasos); await m.showIcon("SmallHeart"); await m.clear(); });
+    m.onButton("A",async()=>{ await m.showNumber(pasos); });
+    m.onButton("B",async()=>{ pasos=0; m.v("pasos",0); await m.showIcon("Yes"); });
+    m.start(async()=>{ pasos=0; m.v("pasos",0); await m.showString("PASOS"); }); } },
+
+{ id:"ej4", q:"¿Qué pasaría si olvidas el bloque “cambiar segundos por -1” dentro del “mientras”? Pruébalo y describe lo que ves.", name:"Temporizador", concept:"mientras", cc:"loops",
+  sit:"Un temporizador para cocinar, estudiar o hacer ejercicio. Con A eliges los segundos, con B empieza la cuenta regresiva y al llegar a cero suena una melodía.",
+  news:[["loops","mientras"],["music","reproducir melodía"],["var","cambiar por -1"]],
+  blocks:[
+    HAT("basic",["al iniciar"],[S("var",["fijar",D("segundos"),"a",F(0)]),S("basic",["mostrar número",V("segundos")])],"start"),
+    HAT("input",[btn(),D("A")],[S("var",["cambiar",D("segundos"),"por",F(1)]),S("basic",["mostrar número",V("segundos")])],"A"),
+    HAT("input",[btn(),D("B")],[
+      LOOP("loops",["mientras",Bo("logic",[V("segundos"),D(">"),F(0)])],[
+        S("basic",["mostrar número",V("segundos")]), S("basic",["pausa (ms)",F(1000)]), S("var",["cambiar",D("segundos"),"por",F(-1)])]),
+      S("basic",["mostrar ícono",I("Yes")]),
+      S("music",["reproducir melodía",D("power up"),"hasta que termine"])],"B")],
+  steps:[["var","Crea una variable llamada <b>segundos</b>."],
+    ["basic","En “al iniciar”: “fijar segundos a 0” y “mostrar número segundos”."],
+    ["input","En “al presionarse el botón A”: “cambiar segundos por 1” y “mostrar número segundos”."],
+    ["loops","En “al presionarse el botón B” coloca “mientras”. Trae “verdadero”: cámbialo por la comparación."],
+    ["logic","La comparación queda <b>segundos &gt; 0</b>."],
+    ["basic","Dentro del “mientras”: “mostrar número segundos” y “pausa (ms) 1000”."],
+    ["var","Todavía dentro: “cambiar segundos por <b>-1</b>” para restar."],
+    ["music","Debajo del “mientras” (por fuera): “mostrar ícono” ✓ y “reproducir melodía power up hasta que termine”."]],
+  test:"Presiona A tres veces (sale 3) y luego B. Cuenta 3, 2, 1, muestra ✓ y suena la melodía.",
+  reto:"Haz que con A+B se reinicie a 0, o que cada clic en A sume 5 segundos en vez de 1.",
+  sens:[], boards:1,
+  hint:"Presiona <b>A</b> para sumar segundos y <b>B</b> para iniciar. Activa el sonido para oír la melodía.",
+  prog:m=>{ let s=0;
+    m.onButton("A",async()=>{ s+=1; m.v("segundos",s); await m.showNumber(s); });
+    m.onButton("B",async()=>{ while(s>0){ await m.showNumber(s); await m.pause(1000); s+=-1; m.v("segundos",s);} await m.showIcon("Yes"); await m.melody("powerup"); });
+    m.start(async()=>{ s=0; m.v("segundos",0); await m.showNumber(s); }); } },
+
+{ id:"ej5", q:"Cambia el “y” por “o” y prueba. ¿Qué diferencia hay en el comportamiento de la alarma?", name:"Alarma nocturna", concept:"operador y", cc:"logic",
+  sit:"Una alarma para la puerta del salón. Solo suena si está oscuro <b>y</b> la puerta se abre (lo simulamos manteniendo presionado el botón A). De noche, sin intrusos, muestra una cara dormida.",
+  news:[["logic","y"],["input","nivel de luz"],["input","botón A está presionado"]],
+  blocks:[HAT("basic",["para siempre"],[
+      IF([{c:Bo("logic",[Bo("logic",[R("input",["nivel de luz"]),D("<"),F(50)]),"y",Bo("input",["botón",D("A"),"está presionado"])]),
+           b:[S("basic",["mostrar ícono",I("No")]),S("music",["reproducir melodía",D("chase"),"hasta que termine"])]},
+          {c:Bo("logic",[R("input",["nivel de luz"]),D("<"),F(50)]),b:[S("basic",["mostrar ícono",I("Asleep")])]}],
+         [S("basic",["borrar pantalla"])])
+    ],"forever")],
+  steps:[["logic","Dentro de “para siempre” coloca “si … entonces … si no” y pulsa <b>+</b> para tener “si no si”."],
+    ["logic","En el primer “si” arrastra el bloque <b>y</b>."],
+    ["logic","En el lado izquierdo del “y” pon la comparación <b>nivel de luz &lt; 50</b>."],
+    ["input","En el lado derecho del “y” pon “botón A está presionado”."],
+    ["basic","Dentro: “mostrar ícono” ✗ y debajo “reproducir melodía … hasta que termine” (Música)."],
+    ["logic","En “si no si” pon otra vez <b>nivel de luz &lt; 50</b> y dentro “mostrar ícono” cara dormida."],
+    ["basic","En “si no” coloca “borrar pantalla”."]],
+  test:"Con luz alta la pantalla está apagada. Baja la luz de 50: aparece la cara dormida. Ahora mantén presionado A: suena la alarma.",
+  reto:"Cambia el “y” por “o” y explica en el blog del grupo qué cambió en el comportamiento.",
+  sens:["light"], boards:1,
+  hint:"Baja el <b>nivel de luz</b> por debajo de 50 y <b>mantén presionado A</b> para abrir la puerta.",
+  prog:m=>{
+    m.forever(async()=>{ const l=m.light(); m.v("nivel de luz",l);
+      if(l<50 && m.pressed("A")){ await m.showIcon("No"); await m.melody("chase"); }
+      else if(l<50){ await m.showIcon("Asleep"); }
+      else { await m.clear(); } }); } },
+
+{ id:"ej6", q:"¿Por qué cada grupo del salón debe usar un número de grupo de radio diferente?", name:"Walkie-talkie", concept:"radio", cc:"radio",
+  sit:"Dos micro:bits se envían mensajes por radio. El botón A envía un corazón y el botón B una cara feliz a la otra tarjeta. Solo se comunican si están en el mismo grupo.",
+  news:[["radio","radio establecer grupo"],["radio","radio enviar número"],["radio","al recibir radio"]],
+  blocks:[
+    HAT("basic",["al iniciar"],[S("radio",["radio establecer grupo",F(1)])],"start"),
+    HAT("input",[btn(),D("A")],[S("radio",["radio enviar número",F(1)])],"A"),
+    HAT("input",[btn(),D("B")],[S("radio",["radio enviar número",F(2)])],"B"),
+    HAT("radio",["al recibir radio",R("var",["receivedNumber"])],[
+      IF([{c:Bo("logic",[V("receivedNumber"),D("="),F(1)]),b:[S("basic",["mostrar ícono",I("Heart")])]}],
+         [S("basic",["mostrar ícono",I("Happy")])])],"recv")],
+  steps:[["radio","En “al iniciar” coloca “radio establecer grupo 1”."],
+    ["input","Agrega “al presionarse el botón A” y dentro “radio enviar número 1”."],
+    ["input","Agrega “al presionarse el botón B” y dentro “radio enviar número 2”."],
+    ["radio","Arrastra “al recibir radio receivedNumber”."],
+    ["logic","Dentro pon “si … entonces … si no” con la comparación <b>receivedNumber = 1</b>. Arrastra receivedNumber desde el bloque rojo de arriba."],
+    ["basic","En “entonces”: “mostrar ícono” corazón. En “si no”: “mostrar ícono” cara feliz."]],
+  test:"En MakeCode aparecen dos tarjetas en el simulador. Presiona A en una y mira el corazón en la otra.",
+  reto:"Cada grupo elige un número de grupo diferente (1 a 6). Comprueben que los mensajes de otro grupo no les llegan.",
+  sens:[], boards:2,
+  hint:"Presiona <b>A</b> o <b>B</b> en una tarjeta: el mensaje aparece en la otra.",
+  prog:m=>{
+    m.onReceive(async n=>{ m.v("receivedNumber",n); if(n==1) await m.showIcon("Heart"); else await m.showIcon("Happy"); });
+    m.onButton("A",async()=>{ m.send(1); });
+    m.onButton("B",async()=>{ m.send(2); });
+    m.start(async()=>{ m.setGroup(1); }); } }
+];
+
+/* ---------- Motor del simulador ---------- */
+let RUN=0, BOARDS=[], hlCount={};
+const SENS={temp:21, light:180};
+class Stopped extends Error{}
+const sleep=(ms,id)=>new Promise((res,rej)=>setTimeout(()=>id===RUN?res():rej(new Stopped()),ms));
+let actx=null, soundOn=true;
+function ensureAudio(){ try{ if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)(); if(actx.state==="suspended") actx.resume(); }catch(e){} }
+document.addEventListener("pointerdown",ensureAudio);
+const MEL={powerup:[[523,.12],[659,.12],[784,.12],[1047,.3]], chase:[[880,.14],[698,.14],[880,.14],[698,.14],[880,.14],[698,.14]]};
+
+function hl(h,d){ hlCount[h]=(hlCount[h]||0)+d; document.querySelectorAll(`[data-h="${h}"]`).forEach(e=>e.classList.toggle("run",hlCount[h]>0)); }
+async function runH(h,fn,arg,id){ hl(h,1); try{ await fn(arg); }catch(e){ if(!(e instanceof Stopped)) console.error(e); } finally{ if(id===RUN) hl(h,-1); } }
+
+function textCols(s){
+  s=s.toUpperCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+  const cols=[];
+  for(const ch of s){ const g=grid(FONT[ch]||FONT["-"]); let w=5; while(w>1&&g.every(r=>!r[w-1])) w--; if(ch===" ") w=2;
+    for(let c=0;c<w;c++) cols.push(g.map(r=>r[c])); cols.push([0,0,0,0,0].map(()=>false)); }
+  return cols;
+}
+function makeBoard(host,idx,ex){
+  const w=document.createElement("div"); w.className="bwrap";
+  const pins=["0","","","1","","","2","","","3V","","","GND"].map(p=>p?`<div class="pin big"><b>${p}</b></div>`:`<div class="pin"></div>`).join("");
+  w.innerHTML=`${ex.boards>1?`<div class="bname">micro:bit ${idx+1}</div>`:""}
+  <div class="board"><div class="note" aria-hidden="true">♪</div><div class="logo"></div>
+    <button class="bt a" aria-label="Botón A"><span>A</span></button>
+    <div class="leds">${"<div class='led'></div>".repeat(25)}</div>
+    <button class="bt b" aria-label="Botón B"><span>B</span></button>
+    <div class="pins">${pins}</div></div>
+  ${ex.sens.includes("shake")?`<button class="shakebtn">AGITAR</button>`:""}
+  <div class="vars"></div>`;
+  host.appendChild(w);
+  const el=w.querySelector(".board"), leds=[...w.querySelectorAll(".led")];
+  const b={idx,el,handlers:{},pressed:{A:false,B:false},vars:{},group:0,starts:[],forevers:[],
+    draw(g){ g.forEach((r,i)=>r.forEach((o,j)=>leds[i*5+j].classList.toggle("on",!!o))); },
+    cols(cs,off){ for(let i=0;i<5;i++)for(let j=0;j<5;j++){ const c=cs[off+j]; leds[i*5+j].classList.toggle("on",!!(c&&c[i])); } },
+    clear(){ leds.forEach(l=>l.classList.remove("on")); },
+    flash(c){ el.classList.remove(c); void el.offsetWidth; el.classList.add(c); setTimeout(()=>el.classList.remove(c),700); },
+    fire(k,arg){ const fn=b.handlers[k]; if(fn) runH(k,fn,arg,RUN); },
+    renderVars(){ w.querySelector(".vars").innerHTML=Object.entries(b.vars).map(([k,v])=>`<span class="var">${E(k)} = ${E(v)}</span>`).join(""); }
+  };
+  for(const k of ["A","B"]){
+    const bt=w.querySelector(".bt."+k.toLowerCase()); let t0=0;
+    const up=()=>{ const left=Math.max(0,250-(Date.now()-t0)); setTimeout(()=>{ b.pressed[k]=false; bt.classList.remove("down"); },left); };
+    bt.addEventListener("pointerdown",e=>{ t0=Date.now(); b.pressed[k]=true; bt.classList.add("down"); });
+    bt.addEventListener("pointerup",up); bt.addEventListener("pointerleave",()=>{ if(b.pressed[k]) up(); });
+    bt.addEventListener("click",e=>{ if(e.detail===0){ t0=Date.now(); b.pressed[k]=true; bt.classList.add("down"); up(); } b.fire(k); });
+  }
+  const sb=w.querySelector(".shakebtn");
+  if(sb) sb.addEventListener("click",()=>{ el.classList.remove("shake"); void el.offsetWidth; el.classList.add("shake"); b.fire("shake"); });
+  return b;
+}
+function api(b,id){
+  let lock=Promise.resolve();
+  const disp=fn=>{ const p=lock.then(()=>{ if(id!==RUN) throw new Stopped(); return fn(); }); lock=p.catch(()=>{}); return p; };
+  const scroll=async s=>{ const cs=textCols(String(s));
+    if(String(s).length===1){ const g=cs.slice(0,cs.length-1); const pad=Math.floor((5-g.length)/2); b.cols([...Array(pad).fill(null),...g],0); await sleep(450,id); return; }
+    const seq=[...Array(5).fill(null),...cs,...Array(4).fill(null)];
+    for(let k=0;k<=seq.length-5;k++){ b.cols(seq,k); await sleep(85,id); } };
+  return {
+    showIcon:n=>disp(async()=>{ b.draw(grid(ICONS[n])); await sleep(600,id); }),
+    showString:s=>disp(()=>scroll(s)), showNumber:n=>disp(()=>scroll(n)),
+    clear:()=>disp(async()=>b.clear()), pause:ms=>sleep(ms,id),
+    temperature:()=>SENS.temp, light:()=>SENS.light, pressed:k=>b.pressed[k],
+    rand:(a,c)=>a+Math.floor(Math.random()*(c-a+1)),
+    melody:async name=>{ const seq=MEL[name]; ensureAudio();
+      if(actx&&soundOn){ let t=actx.currentTime+.02; for(const [f,d] of seq){ const o=actx.createOscillator(),g=actx.createGain(); o.type="square"; o.frequency.value=f; g.gain.setValueAtTime(.05,t); g.gain.exponentialRampToValueAtTime(.0008,t+d); o.connect(g).connect(actx.destination); o.start(t); o.stop(t+d); t+=d; } }
+      b.el.classList.add("sound"); try{ await sleep(seq.reduce((a,x)=>a+x[1],0)*1000,id); } finally{ b.el.classList.remove("sound"); } },
+    setGroup:g=>{ b.group=g; },
+    send:n=>{ b.flash("tx"); BOARDS.filter(o=>o!==b&&o.group===b.group).forEach(o=>setTimeout(()=>{ if(id!==RUN) return; o.flash("rx"); o.fire("recv",n); },180)); },
+    v:(k,val)=>{ b.vars[k]=val; b.renderVars(); },
+    start:fn=>b.starts.push(fn), forever:fn=>b.forevers.push(fn),
+    onButton:(k,fn)=>b.handlers[k]=fn, onShake:fn=>b.handlers.shake=fn, onReceive:fn=>b.handlers.recv=fn
+  };
+}
+async function boot(b,id){
+  for(const fn of b.starts) await runH("start",fn,null,id);
+  for(const fn of b.forevers){ (async()=>{ hl("forever",1);
+    try{ while(id===RUN){ await fn(); await sleep(20,id); } }catch(e){ if(!(e instanceof Stopped)) console.error(e); }
+  })(); }
+}
+function runSim(ex){
+  RUN++; const id=RUN; hlCount={};
+  document.querySelectorAll(".c.hat.run").forEach(e=>e.classList.remove("run"));
+  const host=document.getElementById("boards"); host.innerHTML="";
+  BOARDS=[...Array(ex.boards)].map((_,i)=>makeBoard(host,i,ex));
+  BOARDS.forEach(b=>{ ex.prog(api(b,id)); boot(b,id); });
+}
+
+/* ---------- Render de la página ---------- */
+function hilite(code){
+  return E(code).replace(/(\/\/.*$)|(&quot;|"[^"\n]*")|\b(let|function|if|else|while)\b|(-?\b\d+\b)/gm,(m,c,s,k,n)=>
+    c?`<span class="tk-c">${m}</span>`:s?`<span class="tk-s">${m}</span>`:k?`<span class="tk-k">${m}</span>`:`<span class="tk-n">${m}</span>`);
+}
+const store={ get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }, set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} } };
+
+function renderPicker(cur){
+  document.getElementById("picker").innerHTML=EX.map((x,i)=>`<button class="pick" role="tab" aria-selected="${x.id===cur}" data-id="${x.id}">
+    <span class="num">EJERCICIO ${i+1}</span><span class="nm">${x.name}</span><span class="cc" style="background:${CATC[x.cc]}">${x.concept}</span></button>`).join("");
+  document.querySelectorAll(".pick").forEach(p=>p.onclick=()=>{ location.hash=p.dataset.id; });
+}
+function render(){
+  const cur=(EX.find(x=>"#"+x.id===location.hash)||EX[0]); const n=EX.indexOf(cur)+1;
+  renderPicker(cur.id);
+  const main=document.getElementById("ex");
+  const sensors=[cur.sens.includes("temp")?`<label class="sensor" for="s-temp">Temperatura <input type="range" id="s-temp" min="-5" max="50" value="${SENS.temp}"><output id="o-temp">${SENS.temp} °C</output></label>`:"",
+    cur.sens.includes("light")?`<label class="sensor" for="s-light">Nivel de luz <input type="range" id="s-light" min="0" max="255" value="${SENS.light}"><output id="o-light">${SENS.light}</output></label>`:""].join("");
+  main.innerHTML=`
+  <section class="exhead">
+    <div class="eyebrow">Ejercicio ${n} de 6</div>
+    <h2>${cur.name}</h2>
+    <p class="sit">${cur.sit}</p>
+    <div class="chips"><span class="lbl2">Bloques nuevos:</span>${cur.news.map(([k,t])=>`<span class="chip" style="background:${CATC[k]}">${t}</span>`).join("")}</div>
+  </section>
+  <section class="lab">
+    <div class="panel">
+      <div class="ptitle"><h3>Así deben quedar los bloques</h3><small>El bloque que se está ejecutando se ilumina</small></div>
+      <div class="ws">${cur.blocks.map(hat).join("")}</div>
+    </div>
+    <div class="panel sim">
+      <div class="ptitle"><h3>Simulador</h3>
+        <div class="simtools"><button class="tbtn" id="snd" aria-pressed="${soundOn}">♪ Sonido</button><button class="tbtn" id="rst">↻ Reiniciar</button></div></div>
+      <div class="boards" id="boards"></div>
+      ${sensors?`<div class="sensors">${sensors}</div>`:""}
+      <p class="hint">${cur.hint}</p>
+    </div>
+  </section>
+  <section class="duo">
+    <div class="panel">
+      <div class="ptitle"><h3>Paso a paso</h3><small id="cnt"></small></div>
+      <div class="prog"><i id="bar"></i></div>
+      <ol class="steps">${cur.steps.map(([k,t],i)=>`<li><label for="st-${cur.id}-${i}"><input type="checkbox" id="st-${cur.id}-${i}" ${store.get(`g3-${cur.id}-${i}`)==="1"?"checked":""}><span class="tx">${cat(k)}${t}</span></label></li>`).join("")}</ol>
+      <div class="cards"><div class="card"><h4>Prueba</h4><p>${cur.test}</p></div><div class="card reto"><h4>Reto extra</h4><p>${cur.reto}</p></div></div>
+    </div>
+    <div class="panel">
+      <div class="ptitle"><h3>Evidencia para la entrega</h3><small>Ejercicio ${n}</small></div>
+      <ol class="ev">
+        <li><b>Nombre del proyecto:</b> <span class="mono">Ejercicio${n}_Apellido</span></li>
+        <li><b>Enlace:</b> en MakeCode pulsa <b>Compartir › Publicar proyecto</b> y copia el enlace.</li>
+        <li><b>Captura:</b> toma una captura donde se vean los bloques y el simulador funcionando.</li>
+        <li><b>Pregunta para responder:</b><div class="qbox">${cur.q}</div></li>
+      </ol>
+      <p class="paste">Pega estas cuatro cosas en tu documento, debajo del título <b>Ejercicio ${n}. ${cur.name}</b>.</p>
+    </div>
+  </section>`;
+  const upd=()=>{ const boxes=[...main.querySelectorAll(".steps input")], d=boxes.filter(b=>b.checked).length;
+    main.querySelector("#cnt").textContent=`${d} de ${boxes.length} listos`; main.querySelector("#bar").style.width=(d/boxes.length*100)+"%"; };
+  main.querySelectorAll(".steps input").forEach((b,i)=>b.onchange=()=>{ store.set(`g3-${cur.id}-${i}`,b.checked?"1":"0"); upd(); });
+  upd();
+  const t=main.querySelector("#s-temp"); if(t) t.oninput=()=>{ SENS.temp=+t.value; main.querySelector("#o-temp").textContent=t.value+" °C"; };
+  const l=main.querySelector("#s-light"); if(l) l.oninput=()=>{ SENS.light=+l.value; main.querySelector("#o-light").textContent=l.value; };
+  main.querySelector("#rst").onclick=()=>runSim(cur);
+  main.querySelector("#snd").onclick=e=>{ soundOn=!soundOn; e.currentTarget.setAttribute("aria-pressed",soundOn); };
+  runSim(cur);
+}
+window.addEventListener("hashchange",()=>{ render(); document.getElementById("picker").scrollIntoView({behavior:"smooth",block:"start"}); });
+render();
+</script>
+
+</body></html>
